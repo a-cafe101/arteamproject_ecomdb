@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Automotive Product CRUD Tester</title>
+  <style>
+    body  { font-family: Arial, sans-serif; margin: 20px; max-width: 800px; }
+    h1    { color: #2c3e50; }
+    h2    { margin-top: 40px; color: #34495e; border-bottom: 1px solid #ccc; padding-bottom: 4px; }
+    form  { margin-bottom: 20px; padding: 12px; border: 1px solid #ccc; border-radius: 4px; background: #fafafa; }
+    label { display: block; margin: 6px 0 2px; }
+    input, button { margin: 5px 0; padding: 5px; }
+    pre   { background: #f4f4f4; padding: 12px; overflow: auto; }
+  </style>
+</head>
+<body>
+ 
+<h1>Automotive Product CRUD Tester</h1>
+ 
+<!-- READ ALL PRODUCTS -->
+<h2>Get All Products</h2>
+<form id="getAllForm">
+  <button type="submit">Fetch All Products</button>
+</form>
+ 
+<!-- READ ONE PRODUCT -->
+<h2>Get One Product</h2>
+<form id="getOneForm">
+  <label>MongoDB _id:</label>
+  <input type="text" id="getOneId" placeholder="e.g. 2241af..." required>
+  <button type="submit">Fetch Product</button>
+</form>
+ 
+<!-- CREATE PRODUCT -->
+<h2>Create Product</h2>
+<form id="createForm">
+  <label>Store ID:</label>
+  <input type="text" id="createStoreId" placeholder="e.g. STORE-001" required>
+ 
+  <label>Store Name:</label>
+  <input type="text" id="createStoreName" placeholder="e.g. CanadianTire" required>
+ 
+  <label>Product ID:</label>
+  <input type="text" id="createProductId" placeholder="e.g. PROD-006" required>
+ 
+  <label>Product Name:</label>
+  <input type="text" id="createProductName" placeholder="e.g. Coolant" required>
+ 
+  <label>Price ($):</label>
+  <input type="number" id="createPrice" placeholder="e.g. 29.99" step="0.01" min="0" required>
+ 
+  <button type="submit">Create Product</button>
+</form>
+ 
+<!-- UPDATE PRODUCT -->
+<h2>Update Product</h2>
+<form id="updateForm">
+  <label>MongoDB _id:</label>
+  <input type="text" id="updateId" placeholder="e.g. 2241af..." required>
+ 
+  <label>New Product Name (optional):</label>
+  <input type="text" id="updateProductName" placeholder="Leave blank to keep existing name">
+ 
+  <label>New Price ($) (optional):</label>
+  <input type="number" id="updatePrice" placeholder="Leave blank to keep existing price" step="0.01" min="0">
+ 
+  <button type="submit">Update Product</button>
+</form>
+ 
+<!-- DELETE PRODUCT -->
+<h2>Delete Product</h2>
+<form id="deleteForm">
+  <label>MongoDB _id:</label>
+  <input type="text" id="deleteId" placeholder="e.g. 2241af..." required>
+  <button type="submit">Delete Product</button>
+</form>
+ 
+<h2>Response</h2>
+<pre id="jsonOutput">{}</pre>
+ 
+<script>
+  // Helpers; display any value in the response panel as formatted JSON
+  function showJSON(data) {
+    document.getElementById('jsonOutput').textContent = JSON.stringify(data, null, 2);
+  }
+ 
+  async function callAPI(url, options = {}) {
+    try {
+      const res  = await fetch(url, options);
+      const text = await res.text();
+      try {
+        // parsing JSON
+        showJSON(JSON.parse(text));
+      } catch {
+        // if not JSON, show as text
+        showJSON({ status: res.status, body: text });
+      }
+    } catch (err) {
+      showJSON({ error: err.message });
+    }
+  }
+
+  const API = '';
+ 
+  // GET ALL
+  document.getElementById('getAllForm').addEventListener('submit', e => {
+    e.preventDefault();
+    callAPI(`${API}/products`); // GET /products
+  });
+ 
+  // GET ONE
+  document.getElementById('getOneForm').addEventListener('submit', e => {
+    e.preventDefault();
+    const id = document.getElementById('getOneId').value.trim();
+    callAPI(`${API}/products/${id}`); // GET /products/:id
+  });
+ 
+  // CREATE
+  document.getElementById('createForm').addEventListener('submit', e => {
+    e.preventDefault();
+    const body = {
+      storeId:     document.getElementById('createStoreId').value.trim(),
+      storeName:   document.getElementById('createStoreName').value,
+      productId:   document.getElementById('createProductId').value.trim(),
+      productName: document.getElementById('createProductName').value,
+      price:       parseFloat(document.getElementById('createPrice').value)
+    };
+    callAPI(`${API}/products`, {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify(body)
+    });
+  });
+ 
+  // UPDATE
+  document.getElementById('updateForm').addEventListener('submit', e => {
+    e.preventDefault();
+    const id = document.getElementById('updateId').value.trim();
+ 
+    // Only include fields that are filled in
+    const body = {};
+    const name  = document.getElementById('updateProductName').value;
+    const price = document.getElementById('updatePrice').value;
+    if (name)  body.productName = name;
+    if (price) body.price = parseFloat(price);
+ 
+    callAPI(`${API}/products/${id}`, {
+      method:  'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify(body)
+    });
+  });
+ 
+  // DELETE
+  document.getElementById('deleteForm').addEventListener('submit', e => {
+    e.preventDefault();
+    const id = document.getElementById('deleteId').value.trim();
+    callAPI(`${API}/products/${id}`, { method: 'DELETE' }); // DELETE /products/:id
+  });
+</script>
+ 
+</body>
+</html>
