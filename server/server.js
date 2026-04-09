@@ -77,6 +77,22 @@ app.delete('/products/:id', async (req, res) => {
     res.status(400).json({ error: 'Invalid product ID' });
   }
 });
+
+// GET ALL PRODUCTS FROM TEAM'S STORES
+const fetch = require('node-fetch');
+const TEAM_URLS = [
+  'https://arteamproject-ecomdb.onrender.com/products',   // MY URL
+  'https://jacobs-ecommerce-site.onrender.com/products',  // JACOB'S URL
+];
+
+app.get('/all-products', async (req, res) => {
+  try {
+    const results = await Promise.all(TEAM_URLS.map(url => fetch(url).then(r => r.json())));
+    res.json(results);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
  
 // START SERVER
 const PORT = process.env.PORT || 3000;
