@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 require('dotenv').config();
  
 // Use the Atlas URI stored in .env or defaults to local db
-const dbURI = process.env.DB_URI || 'mongodb+srv://NakMuay1:nakmuay26@cluster0.bmakp11.mongodb.net/ecommerceDB?appName=Cluster0';
+const dbURI = process.env.DB_URI || 'mongodb://localhost/ecommerceDB';
 // Opens the connection
 mongoose.connect(dbURI);
  
