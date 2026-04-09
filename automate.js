@@ -7,7 +7,7 @@ const { execSync } = require('child_process');
 const tests = [
   'node test/getAll.fetch.test.js',        // My first test
   'node test/getAll.axios.test.js',        // My second test
-  // 'node test/teammate1.test.js',  // Jacob's test
+  'npx jest test/getAll.jacob.test.js -- no coverage',  // Jacob's test
 ];
 
 tests.forEach(test => {
