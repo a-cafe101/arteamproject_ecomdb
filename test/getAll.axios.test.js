@@ -1,5 +1,5 @@
-// Tests the GetAll endpoint using axios HTTP client
-// Run with: node test/aasiyah.getAll.axios.test.js
+// Tests the GetAll endpoint using axios
+// Run with: node test/getAll.axios.test.js
 
 const axios = require ('axios');
 
