@@ -1,3 +1,6 @@
+// Tests the GetAll endpoint using fetch
+// Run with: node test/getAll.fetch.test.js
+
 const fetch = require('node-fetch');
 
 const STUDENT_EMAIL = 'rash0093@algonquinlive.com';
