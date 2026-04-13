@@ -82,7 +82,7 @@ app.delete('/products/:id', async (req, res) => {
 const fetch = require('node-fetch');
 const TEAM_URLS = [
   'https://arteamproject-ecomdb.onrender.com/products',   // MY URL
-  'https://jacobs-ecommerce-site.onrender.com/products',  // JACOB'S URL
+  'https://jacobs-ecommerce-site.onrender.com/products',  // TEAMMATE'S URL
 ];
 
 app.get('/all-products', async (req, res) => {
